@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { Angular, React, NodeJs, Flutter } from 'lucide-react';
+import { Code, Cpu, Server, Smartphone } from 'lucide-react';
 import profilePhoto from '@/assets/profile-photo.jpg';
 import heroBackground from '@/assets/hero-bg.jpg';
 
@@ -21,10 +21,10 @@ const Hero = () => {
   };
 
   const frameworks = [
-    { Icon: Angular, name: 'Angular' },
-    { Icon: React, name: 'React' },
-    { Icon: NodeJs, name: 'Node.js' },
-    { Icon: Flutter, name: 'Flutter' }
+    { Icon: Code, name: 'Angular' },
+    { Icon: Code, name: 'React' },
+    { Icon: Server, name: 'Node.js' },
+    { Icon: Smartphone, name: 'Flutter' }
   ];
 
   return (
@@ -50,20 +50,20 @@ const Hero = () => {
         {/* Top Left Framework Icons */}
         <div className="absolute top-20 left-20 hidden lg:flex flex-col space-y-6">
           <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-blue-500/20 animate-pulse">
-            <Angular className="w-8 h-8 text-blue-500" />
+            <Code className="w-8 h-8 text-blue-500" />
           </div>
           <div className="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-blue-500/20 animate-pulse delay-300 ml-8">
-            <React className="w-6 h-6 text-blue-500" />
+            <Code className="w-6 h-6 text-blue-500" />
           </div>
         </div>
 
         {/* Top Right Framework Icons */}
         <div className="absolute top-32 right-20 hidden lg:flex flex-col space-y-4">
           <div className="w-14 h-14 bg-blue-500/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-blue-500/20 animate-pulse delay-700">
-            <NodeJs className="w-7 h-7 text-blue-500" />
+            <Server className="w-7 h-7 text-blue-500" />
           </div>
           <div className="w-10 h-10 bg-blue-500/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-blue-500/20 animate-pulse delay-1000 mr-6">
-            <Flutter className="w-5 h-5 text-blue-500" />
+            <Smartphone className="w-5 h-5 text-blue-500" />
           </div>
         </div>
 
