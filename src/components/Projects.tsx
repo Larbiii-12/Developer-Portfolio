@@ -1,139 +1,14 @@
+
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { useProjects } from '@/hooks/useProjects';
+import { Loader2 } from 'lucide-react';
 
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState('all');
-
-  const projects = [
-    // Freelance Projects
-    {
-      title: 'E-commerce Platform',
-      category: 'freelance',
-      type: 'Freelance',
-      date: '2024',
-      description: 'Full-featured e-commerce platform built with Symfony, featuring product management, payment integration, and admin dashboard.',
-      technologies: ['Symfony', 'PHP', 'MySQL', 'Bootstrap', 'JavaScript'],
-      github: null,
-      live: null,
-      featured: true
-    },
-    {
-      title: 'MERN Travel Agency',
-      category: 'freelance',
-      type: 'Freelance',
-      date: '2024',
-      description: 'Modern travel booking website with React frontend and Node.js backend, featuring destination browsing and booking system.',
-      technologies: ['React', 'Node.js', 'MongoDB', 'Express', 'TypeScript'],
-      github: null,
-      live: null,
-      featured: true
-    },
-    {
-      title: 'Training Catalog System',
-      category: 'freelance',
-      type: 'Freelance',
-      date: '2023',
-      description: 'Training management platform with course catalog, user enrollment, and progress tracking built with Symfony.',
-      technologies: ['Symfony', 'PHP', 'PostgreSQL', 'Twig', 'CSS3'],
-      github: null,
-      live: null,
-      featured: false
-    },
-    {
-      title: 'Restaurant Management App',
-      category: 'freelance',
-      type: 'Freelance',
-      date: '2023',
-      description: 'Restaurant ordering and management system with real-time order tracking and inventory management.',
-      technologies: ['PHP', 'JavaScript', 'MySQL', 'AJAX', 'Bootstrap'],
-      github: null,
-      live: null,
-      featured: false
-    },
-
-    // Internship Projects
-    {
-      title: 'ERP Business Intelligence',
-      category: 'internship',
-      type: 'Internship',
-      date: '2024',
-      description: 'Enterprise resource planning system with advanced BI features, built using Symfony and NestJS microservices architecture.',
-      technologies: ['Symfony', 'NestJS', 'TypeScript', 'PostgreSQL', 'Docker'],
-      github: null,
-      live: null,
-      featured: true
-    },
-    {
-      title: 'Mobile Maintenance App',
-      category: 'internship',
-      type: 'Internship',
-      date: '2023',
-      description: 'Flutter mobile application for equipment maintenance tracking with offline capabilities and real-time synchronization.',
-      technologies: ['Flutter', 'Dart', 'Firebase', 'SQLite', 'REST API'],
-      github: null,
-      live: null,
-      featured: true
-    },
-
-    // Academic Projects
-    {
-      title: 'Banking Application',
-      category: 'academic',
-      type: 'Academic',
-      date: '2023',
-      description: 'Secure banking application with CI/CD pipeline, automated testing with Jenkins, and code quality analysis with SonarQube.',
-      technologies: ['Java', 'Spring Boot', 'Jenkins', 'SonarQube', 'JUnit'],
-      github: 'https://github.com/mohamed-aloui',
-      live: null,
-      featured: true
-    },
-    {
-      title: 'Freezer Management System',
-      category: 'academic',
-      type: 'Academic',
-      date: '2023',
-      description: 'Mobile and web application for inventory management in cold storage facilities, built with Angular and Ionic.',
-      technologies: ['Angular', 'Ionic', 'TypeScript', 'Firebase', 'Capacitor'],
-      github: 'https://github.com/mohamed-aloui',
-      live: null,
-      featured: false
-    },
-    {
-      title: 'RPG Game Engine',
-      category: 'academic',
-      type: 'Academic',
-      date: '2022',
-      description: 'Role-playing game developed with Godot engine, featuring custom scripting and game mechanics.',
-      technologies: ['Godot', 'GDScript', 'C#', '2D Graphics', 'Game Design'],
-      github: 'https://github.com/mohamed-aloui',
-      live: null,
-      featured: false
-    },
-    {
-      title: 'Advertising Playlist Manager',
-      category: 'academic',
-      type: 'Academic',
-      date: '2022',
-      description: 'Digital signage content management system for scheduling and displaying advertising content.',
-      technologies: ['JavaScript', 'HTML5', 'CSS3', 'Node.js', 'WebSocket'],
-      github: 'https://github.com/mohamed-aloui',
-      live: null,
-      featured: false
-    },
-    {
-      title: 'Road Infraction Management',
-      category: 'academic',
-      type: 'Academic',
-      date: '2022',
-      description: 'Traffic violation tracking system with TypeScript frontend and PHP backend for municipal authorities.',
-      technologies: ['TypeScript', 'PHP', 'MySQL', 'REST API', 'Bootstrap'],
-      github: 'https://github.com/mohamed-aloui',
-      live: null,
-      featured: false
-    }
-  ];
+  const { data: projects, isLoading, error } = useProjects();
 
   const filters = [
     { id: 'all', label: 'All Projects' },
@@ -143,8 +18,45 @@ const Projects = () => {
   ];
 
   const filteredProjects = activeFilter === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === activeFilter);
+    ? projects || []
+    : projects?.filter(project => project.category === activeFilter) || [];
+
+  if (isLoading) {
+    return (
+      <section id="projects" className="py-20 bg-gradient-to-b from-secondary/20 to-background">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-inter font-bold text-4xl md:text-5xl text-foreground mb-4">
+              My <span className="bg-gradient-primary bg-clip-text text-transparent">Projects</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              A showcase of my work across freelance projects, internships, and academic achievements
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="projects" className="py-20 bg-gradient-to-b from-secondary/20 to-background">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <h2 className="font-inter font-bold text-4xl md:text-5xl text-foreground mb-4">
+              My <span className="bg-gradient-primary bg-clip-text text-transparent">Projects</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Unable to load projects at the moment. Please try again later.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="projects" className="py-20 bg-gradient-to-b from-secondary/20 to-background">
@@ -177,14 +89,34 @@ const Projects = () => {
 
         {/* Projects Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
+          {filteredProjects.map((project) => (
             <Card 
-              key={index}
+              key={project.id}
               className={`group bg-card border-border hover:border-primary/50 transition-all duration-300 hover:shadow-card overflow-hidden ${
                 project.featured ? 'ring-1 ring-primary/20' : ''
               }`}
             >
               <div className="p-6 h-full flex flex-col">
+                {/* Project Media */}
+                {project.media_url && (
+                  <div className="mb-4 rounded-lg overflow-hidden">
+                    {project.media_type === 'image' ? (
+                      <img 
+                        src={project.media_url} 
+                        alt={project.title}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : project.media_type === 'video' ? (
+                      <video 
+                        src={project.media_url}
+                        className="w-full h-48 object-cover"
+                        controls
+                        preload="metadata"
+                      />
+                    ) : null}
+                  </div>
+                )}
+
                 {/* Project Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -261,6 +193,15 @@ const Projects = () => {
             </Card>
           ))}
         </div>
+
+        {/* Empty State */}
+        {filteredProjects.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              No projects found for the selected category.
+            </p>
+          </div>
+        )}
 
         {/* View More */}
         <div className="text-center mt-12">

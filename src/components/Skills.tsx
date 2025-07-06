@@ -1,80 +1,11 @@
+
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { useSkillsByCategory } from '@/hooks/useSkills';
+import { Loader2 } from 'lucide-react';
 
 const Skills = () => {
-  const skillCategories = [
-    {
-      title: 'Frontend Development',
-      icon: '🎨',
-      skills: [
-        { name: 'React / Next.js', level: 90 },
-        { name: 'TypeScript', level: 85 },
-        { name: 'Angular', level: 80 },
-        { name: 'HTML5 / CSS3', level: 95 },
-        { name: 'Tailwind CSS', level: 90 },
-        { name: 'JavaScript ES6+', level: 90 }
-      ]
-    },
-    {
-      title: 'Backend Development',
-      icon: '⚙️',
-      skills: [
-        { name: 'Symfony (PHP)', level: 90 },
-        { name: 'Node.js / Express', level: 85 },
-        { name: 'NestJS', level: 80 },
-        { name: 'Java / Spring Boot', level: 75 },
-        { name: 'REST API Design', level: 90 },
-        { name: 'GraphQL', level: 70 }
-      ]
-    },
-    {
-      title: 'Mobile Development',
-      icon: '📱',
-      skills: [
-        { name: 'Flutter / Dart', level: 85 },
-        { name: 'Ionic', level: 80 },
-        { name: 'React Native', level: 75 },
-        { name: 'PWA Development', level: 85 },
-        { name: 'Mobile UI/UX', level: 80 }
-      ]
-    },
-    {
-      title: 'Database & Storage',
-      icon: '🗄️',
-      skills: [
-        { name: 'PostgreSQL', level: 85 },
-        { name: 'MySQL', level: 90 },
-        { name: 'MongoDB', level: 80 },
-        { name: 'Firebase', level: 85 },
-        { name: 'Redis', level: 75 },
-        { name: 'SQLite', level: 80 }
-      ]
-    },
-    {
-      title: 'DevOps & Testing',
-      icon: '🚀',
-      skills: [
-        { name: 'Docker / Containerization', level: 80 },
-        { name: 'Jenkins CI/CD', level: 85 },
-        { name: 'GitHub Actions', level: 80 },
-        { name: 'SonarQube', level: 75 },
-        { name: 'JUnit / PHPUnit', level: 85 },
-        { name: 'Selenium / Katalon', level: 80 }
-      ]
-    },
-    {
-      title: 'Tools & Methodologies',
-      icon: '🛠️',
-      skills: [
-        { name: 'Git / GitHub', level: 95 },
-        { name: 'Agile / Scrum', level: 85 },
-        { name: 'Jira / Project Management', level: 80 },
-        { name: 'Figma / UI Design', level: 75 },
-        { name: 'Postman / API Testing', level: 90 },
-        { name: 'Linux / Command Line', level: 85 }
-      ]
-    }
-  ];
+  const { data: skillsByCategory, isLoading, error } = useSkillsByCategory();
 
   const getSkillColor = (level: number) => {
     if (level >= 90) return 'bg-gradient-to-r from-primary to-primary-glow';
@@ -82,6 +13,57 @@ const Skills = () => {
     if (level >= 70) return 'bg-gradient-to-r from-primary/60 to-primary/80';
     return 'bg-gradient-to-r from-primary/40 to-primary/60';
   };
+
+  const getCategoryIcon = (category: string) => {
+    const iconMap: Record<string, string> = {
+      'Frontend Development': '🎨',
+      'Backend Development': '⚙️',
+      'Mobile Development': '📱',
+      'Database & Storage': '🗄️',
+      'DevOps & Testing': '🚀',
+      'Tools & Methodologies': '🛠️'
+    };
+    return iconMap[category] || '💻';
+  };
+
+  if (isLoading) {
+    return (
+      <section id="skills" className="py-20 bg-gradient-to-b from-background to-secondary/20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="font-inter font-bold text-4xl md:text-5xl text-foreground mb-4">
+              Technical <span className="bg-gradient-primary bg-clip-text text-transparent">Skills</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Comprehensive expertise across the full technology stack
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || !skillsByCategory) {
+    return (
+      <section id="skills" className="py-20 bg-gradient-to-b from-background to-secondary/20">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <h2 className="font-inter font-bold text-4xl md:text-5xl text-foreground mb-4">
+              Technical <span className="bg-gradient-primary bg-clip-text text-transparent">Skills</span>
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Unable to load skills at the moment. Please try again later.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const categoryEntries = Object.entries(skillsByCategory);
 
   return (
     <section id="skills" className="py-20 bg-gradient-to-b from-background to-secondary/20">
@@ -96,23 +78,23 @@ const Skills = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {skillCategories.map((category, categoryIndex) => (
+          {categoryEntries.map(([category, skills], categoryIndex) => (
             <Card 
-              key={categoryIndex}
+              key={category}
               className="p-6 bg-card border-border hover:border-primary/30 transition-all duration-300 hover:shadow-card group"
             >
               <div className="text-center mb-6">
                 <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {category.icon}
+                  {getCategoryIcon(category)}
                 </div>
                 <h3 className="font-inter font-semibold text-xl text-foreground group-hover:text-primary transition-colors">
-                  {category.title}
+                  {category}
                 </h3>
               </div>
 
               <div className="space-y-4">
-                {category.skills.map((skill, skillIndex) => (
-                  <div key={skillIndex} className="space-y-2">
+                {skills.map((skill) => (
+                  <div key={skill.id} className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="text-secondary-foreground font-medium text-sm">
                         {skill.name}
@@ -156,6 +138,15 @@ const Skills = () => {
             </Card>
           ))}
         </div>
+
+        {/* Empty State */}
+        {categoryEntries.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              No skills data available at the moment.
+            </p>
+          </div>
+        )}
 
         {/* Additional Info */}
         <Card className="mt-12 p-8 bg-card border-border text-center">
